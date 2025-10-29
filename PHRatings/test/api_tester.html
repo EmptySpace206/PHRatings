@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHRatings API Tester</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .endpoint-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+
+        .response-area {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 3px;
+            padding: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .success {
+            color: #28a745;
+        }
+
+        .error {
+            color: #dc3545;
+        }
+
+        .info {
+            color: #17a2b8;
+        }
+
+        .auth-token {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .user-info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1 class="text-center mb-4">PHRatings API Tester</h1>
+
+        <!-- Auth Token Display -->
+        <div class="auth-token">
+            <strong>Current Auth Token:</strong> <span id="currentToken">Not logged in</span>
+            <button class="btn btn-sm btn-secondary ms-2" onclick="clearToken()">Clear Token</button>
+        </div>
+
+        <!-- User Info Display -->
+        <div class="user-info">
+            <strong>Logged in as:</strong> <span id="userInfo">Not logged in</span>
+        </div>
+
+        <div class="row">
+            <!-- Authentication Section -->
+            <div class="col-md-6">
+                <div class="endpoint-section">
+                    <h3>Admin Authentication</h3>
+
+                    <!-- Login Admin -->
+                    <div class="mb-3">
+                        <h5>Login Admin</h5>
+                        <div class="mb-2">
+                            <input type="text" id="loginUsername" class="form-control" placeholder="Username">
+                        </div>
+                        <div class="mb-2">
+                            <input type="password" id="loginPassword" class="form-control" placeholder="Password">
+                        </div>
+                        <button class="btn btn-success" onclick="loginAdmin()">Login</button>
+                        <div id="loginResponse" class="response-area mt-2"></div>
+                    </div>
+
+                    <!-- Logout Admin -->
+                    <div class="mb-3">
+                        <h5>Logout Admin</h5>
+                        <button class="btn btn-warning" onclick="logoutAdmin()">Logout</button>
+                        <div id="logoutResponse" class="response-area mt-2"></div>
+                    </div>
+                </div>
+
+                <div class="endpoint-section">
+                    <h3>Player Authentication</h3>
+
+                    <!-- Login Player -->
+                    <div class="mb-3">
+                        <h5>Login Player</h5>
+                        <div class="mb-2">
+                            <input type="text" id="playerLoginName" class="form-control" placeholder="Player Name">
+                        </div>
+                        <div class="mb-2">
+                            <input type="password" id="playerLoginPassword" class="form-control" placeholder="Password">
+                        </div>
+                        <button class="btn btn-success" onclick="loginPlayer()">Login</button>
+                        <div id="playerLoginResponse" class="response-area mt-2"></div>
+                    </div>
+
+                    <!-- Logout Player -->
+                    <div class="mb-3">
+                        <h5>Logout Player</h5>
+                        <button class="btn btn-warning" onclick="logoutPlayer()">Logout</button>
+                        <div id="playerLogoutResponse" class="response-area mt-2"></div>
+                    </div>
+                </div>
+
+                <!-- Player Management Section -->
+                <div class="endpoint-section">
+                    <h3>Player Management</h3>
+
+                    <!-- Register Player -->
+                    <div class="mb-3">
+                        <h5>Register Player</h5>
+                        <div class="mb-2">
+                            <input type="text" id="playerName" class="form-control" placeholder="Player Name">
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" id="playerAge" class="form-control" placeholder="Age">
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" id="playerWeight" class="form-control" placeholder="Weight" step="0.1">
+                        </div>
+                        <div class="mb-2">
+                            <input type="password" id="playerPassword" class="form-control" placeholder="Password">
+                        </div>
+                        <button class="btn btn-primary" onclick="registerPlayer()">Register Player</button>
+                        <div id="regPlayerResponse" class="response-area mt-2"></div>
+                    </div>
+
+                    <!-- List Players -->
+                    <div class="mb-3">
+                        <h5>List Players</h5>
+                        <button class="btn btn-info" onclick="listPlayers()">Get All Players</button>
+                        <div id="playersResponse" class="response-area mt-2"></div>
+                    </div>
+
+                    <!-- Admin Actions -->
+                    <div class="mb-3">
+                        <h5>Admin Player Actions</h5>
+                        <button class="btn btn-info" onclick="listPendingPlayers()">List Pending Players</button>
+                        <div class="row mt-2">
+                            <div class="col">
+                                <input type="number" id="approvePlayerId" class="form-control" placeholder="Player ID to Approve">
+                                <button class="btn btn-success mt-1" onclick="approvePlayer()">Approve Player</button>
+                            </div>
+                            <div class="col">
+                                <input type="number" id="rejectPlayerId" class="form-control" placeholder="Player ID to Reject">
+                                <button class="btn btn-danger mt-1" onclick="rejectPlayer()">Reject Player</button>
+                            </div>
+                        </div>
+                        <div id="adminPlayerResponse" class="response-area mt-2"></div>
+                    </div>
+
+                    <!-- Update Weight -->
+                    <div class="mb-3">
+                        <h5>Update Player Weight</h5>
+                        <div class="mb-2">
+                            <input type="number" id="newWeight" class="form-control" placeholder="New Weight" step="0.1">
+                        </div>
+                        <small class="text-muted">Note: If logged in as player, updates your own weight. If logged in as admin, you must provide player_id in JSON body.</small>
+                        <button class="btn btn-primary mt-2" onclick="updateWeight()">Update Weight</button>
+                        <div id="updateWeightResponse" class="response-area mt-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Challenges and Tournaments Section -->
+            <div class="col-md-6">
+                <!-- Challenge System -->
+                <div class="endpoint-section">
+                    <h3>Challenge System</h3>
+
+                    <!-- Create Challenge -->
+                    <div class="mb-3">
+                        <h5>Create Challenge</h5>
+                        <div class="mb-2">
+                            <input type="number" id="challengerId" class="form-control" placeholder="Challenger ID (must be logged in player)">
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" id="challengedId" class="form-control" placeholder="Challenged ID">
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" id="challengeHostId" class="form-control" placeholder="Host ID">
+                        </div>
+                        <button class="btn btn-primary" onclick="createChallenge()">Create Challenge</button>
+                        <div id="createChallengeResponse" class="response-area mt-2"></div>
+                    </div>
+
+                    <!-- Accept Challenge -->
+                    <div class="mb-3">
+                        <h5>Accept Challenge</h5>
+                        <div class="mb-2">
+                            <input type="number" id="acceptChallengeId" class="form-control" placeholder="Challenge ID">
+                        </div>
+                        <small class="text-muted">Note: Must be logged in as the challenged player</small>
+                        <button class="btn btn-success mt-2" onclick="acceptChallenge()">Accept Challenge</button>
+                        <div id="acceptChallengeResponse" class="response-area mt-2"></div>
+                    </div>
+
+                    <!-- List Challenges -->
+                    <div class="mb-3">
+                        <h5>List Challenges</h5>
+                        <button class="btn btn-info" onclick="listChallenges()">Get All Challenges</button>
+                        <div id="challengesResponse" class="response-area mt-2"></div>
+                    </div>
+                </div>
+
+                <!-- Tournament System -->
+                <div class="endpoint-section">
+                    <h3>Tournament System</h3>
+
+                    <!-- Create Tournament -->
+                    <div class="mb-3">
+                        <h5>Create Tournament</h5>
+                        <div class="mb-2">
+                            <input type="text" id="tournamentName" class="form-control" placeholder="Tournament Name">
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" id="tournamentHostId" class="form-control" placeholder="Host ID (must be logged in player)">
+                        </div>
+                        <div class="mb-2">
+                            <input type="datetime-local" id="tournamentStartTime" class="form-control">
+                        </div>
+                        <button class="btn btn-primary" onclick="createTournament()">Create Tournament</button>
+                        <div id="createTournamentResponse" class="response-area mt-2"></div>
+                    </div>
+
+                    <!-- Tournament Actions -->
+                    <div class="mb-3">
+                        <h5>Tournament Actions</h5>
+                        <div class="row">
+                            <div class="col">
+                                <input type="number" id="joinTournamentId" class="form-control" placeholder="Tournament ID">
+                                <small class="text-muted">Joins as logged in player</small>
+                                <button class="btn btn-success mt-1" onclick="joinTournament()">Join Tournament</button>
+                            </div>
+                            <div class="col">
+                                <input type="number" id="leaveTournamentId" class="form-control" placeholder="Tournament ID">
+                                <small class="text-muted">Leaves as logged in player</small>
+                                <button class="btn btn-warning mt-1" onclick="leaveTournament()">Leave Tournament</button>
+                            </div>
+                        </div>
+                        <div id="tournamentActionsResponse" class="response-area mt-2"></div>
+                    </div>
+
+                    <!-- List Tournaments -->
+                    <div class="mb-3">
+                        <h5>List Tournaments</h5>
+                        <button class="btn btn-info" onclick="listTournaments()">Get All Tournaments</button>
+                        <div class="row mt-2">
+                            <div class="col">
+                                <input type="number" id="participantsTournamentId" class="form-control" placeholder="Tournament ID">
+                                <button class="btn btn-info mt-1" onclick="getTournamentParticipants()">Get Participants</button>
+                            </div>
+                        </div>
+                        <div id="tournamentsResponse" class="response-area mt-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Match System Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="endpoint-section">
+                    <h3>Match System</h3>
+
+                    <div class="row">
+                        <!-- Record Match Result -->
+                        <div class="col-md-4">
+                            <h5>Record Match Result</h5>
+                            <div class="mb-2">
+                                <input type="number" id="matchPlayer1Id" class="form-control" placeholder="Player 1 ID">
+                            </div>
+                            <div class="mb-2">
+                                <input type="number" id="matchPlayer2Id" class="form-control" placeholder="Player 2 ID">
+                            </div>
+                            <div class="mb-2">
+                                <input type="number" id="matchHostId" class="form-control" placeholder="Host ID (must be logged in)">
+                            </div>
+                            <div class="mb-2">
+                                <input type="number" id="winnerId" class="form-control" placeholder="Winner ID">
+                            </div>
+                            <div class="mb-2">
+                                <input type="text" id="matchNotes" class="form-control" placeholder="Notes (optional)">
+                            </div>
+                            <div class="mb-2">
+                                <input type="text" id="videoLink" class="form-control" placeholder="Video Link (optional)">
+                            </div>
+                            <button class="btn btn-primary" onclick="recordMatchResult()">Record Result</button>
+                        </div>
+
+                        <!-- Tournament Match -->
+                        <div class="col-md-4">
+                            <h5>Record Tournament Match</h5>
+                            <div class="mb-2">
+                                <input type="number" id="tournMatchTournamentId" class="form-control" placeholder="Tournament ID">
+                            </div>
+                            <div class="mb-2">
+                                <input type="number" id="tournMatchHostId" class="form-control" placeholder="Host ID (must be logged in)">
+                            </div>
+                            <div class="mb-2">
+                                <input type="number" id="tournMatchPlayer1Id" class="form-control" placeholder="Player 1 ID">
+                            </div>
+                            <div class="mb-2">
+                                <input type="number" id="tournMatchPlayer2Id" class="form-control" placeholder="Player 2 ID">
+                            </div>
+                            <div class="mb-2">
+                                <input type="number" id="tournMatchWinnerId" class="form-control" placeholder="Winner ID">
+                            </div>
+                            <button class="btn btn-primary" onclick="recordTournamentMatch()">Record Tournament Match</button>
+                        </div>
+
+                        <!-- Undo Match -->
+                        <div class="col-md-4">
+                            <h5>Undo Last Match</h5>
+                            <small class="text-muted">Undoes last match for logged in player/host</small>
+                            <button class="btn btn-warning mt-2" onclick="undoLastMatch()">Undo Last Match</button>
+                        </div>
+                    </div>
+
+                    <!-- List Matches -->
+                    <div class="mt-3">
+                        <h5>List Matches</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <button class="btn btn-info" onclick="listMatches()">Get All Matches</button>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="number" id="matchesPlayerId" class="form-control" placeholder="Player ID">
+                                <button class="btn btn-info mt-1" onclick="listMatchesByPlayer()">Get Player Matches</button>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="number" id="matchesTournamentId" class="form-control" placeholder="Tournament ID">
+                                <button class="btn btn-info mt-1" onclick="listMatchesByTournament()">Get Tournament Matches</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="matchResponse" class="response-area mt-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SQL Query Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="endpoint-section">
+                    <h3>SQL Query (Admin Only)</h3>
+                    <div class="mb-2">
+                        <textarea id="sqlQuery" class="form-control" rows="3" placeholder="Enter SQL query (SELECT statements only for safety)"></textarea>
+                    </div>
+                    <button class="btn btn-secondary" onclick="runSqlQuery()">Execute Query</button>
+                    <div id="sqlResponse" class="response-area mt-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/test/api_tester.js"></script>
+</body>
+</html>
