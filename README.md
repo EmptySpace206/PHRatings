@@ -6,14 +6,14 @@ It's goal is to enable rated matches among the player pool, both within tourname
 Currently, a production server, and client app, haven't yet been built.
 
 ## Main Features 
-Anyone can request to join as a player, providing age and weight, and admin approval is required. 
+Anyone can request to join as a player, providing age and weight. Admin approval is required. 
 
 ### A player can challenge any other player to a match. 
 1. A second player, and a judge, are named. The judge can be any player besides the two players. 
 2. The named player accepts -> match created. The challenge expires after 10 minutes, if no accept.
 3. The judge can log the winner of the match, within 24 hours. The elo gets adjusted for both players. The match is stored with optional notes, and video link.
 
-### Player's can host tournaments.
+### Player's can host and participate in tournaments.
 * A tournament name is given, and a start time is set. It lasts 24 hours once started. 
 * Players can join until it starts. Players can also leave.
 * The host can log match results between any two players in the tournament until it ends. The player's dont need to specifically 'challenge' each other. 
