@@ -11,7 +11,7 @@ Anyone can request to join as a player, providing age and weight. Admin approval
 ### A player can challenge any other player to a match. 
 1. A second player, and a judge, are named. The judge can be any player besides the two players. 
 2. The named player accepts -> match created. The challenge expires after 10 minutes, if no accept.
-3. The judge can log the winner of the match, within 24 hours. The elo gets adjusted for both players. The match is stored with optional notes, and video link.
+3. The judge can log a winner for the match, within 8 hours. The elo gets adjusted for both players. The match details are stored with optional notes, and video link.
 
 ### Player's can host and participate in tournaments.
 * A tournament name is given, and a start time is set. It lasts 24 hours once started. 
